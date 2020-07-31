@@ -1,0 +1,8 @@
+# editor files
+.vscode
+
+# dataset related files
+DFUC2020
+gt_images
+no_wound
+wound
