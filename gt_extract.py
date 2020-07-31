@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 raw_images_path = "DFUC2020"
 groundtruth = "DFUC2020/groundtruth.csv"
 
-
 if not os.path.exists("gt_images"):
     os.mkdir("gt_images")
 
