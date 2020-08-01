@@ -85,7 +85,7 @@ for(i, image_path) in enumerate(image_paths):
 			if iou > 0.7 and positiveROIs < 30:
 				roi = image[propStartY:propEndY, propStartX:propEndX]
 				filename = "{}.jpg".format(totalPositive)
-				outputPath = os.path.sep.join(["wound", filename])
+				outputPath = os.path.sep.join(["dataset/wound", filename])
 
 				positiveROIs += 1
 				totalPositive += 1
@@ -100,8 +100,7 @@ for(i, image_path) in enumerate(image_paths):
 				# the negative instance
 				roi = image[propStartY:propEndY, propStartX:propEndX]
 				filename = "{}.jpg".format(totalNegative)
-				outputPath = os.path.sep.join(["no_wound",
-					filename])
+				outputPath = os.path.sep.join(["dataset/no_wound", filename])
 				# increment the negative counters
 				negativeROIs += 1
 				totalNegative += 1
