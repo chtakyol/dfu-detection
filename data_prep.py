@@ -39,6 +39,8 @@ def calc_IOU(box1, box2):
 
 # iterate image paths
 for(i, image_path) in enumerate(image_paths):
+	if i > 500:
+		exit()
 	print("[INFO] processing image {}/{}...".format(i + 1,len(image_paths)))
 	filename = image_path.parts[-1]	# selecting filename
 	print(filename)

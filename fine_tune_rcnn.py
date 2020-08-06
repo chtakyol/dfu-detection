@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pathlib
+import pickle
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import AveragePooling2D
@@ -25,8 +26,9 @@ import matplotlib.pyplot as plt
 INIT_LR = 1e-4
 EPOCHS = 5
 BS = 32
-input_size = (160, 160)
-
+input_size = (224, 224)
+model_path = "dfu-detection"
+encoder_path = "dfu-detection"
 dataset_path = "dataset"
 data_dir = pathlib.Path(dataset_path)
 # grab the list of images in our dataset directory, then initialize
@@ -63,6 +65,11 @@ labels = to_categorical(labels)
 (trainX, testX, trainY, testY) = train_test_split(data, labels,
 test_size=0.20, stratify=labels, random_state=42)
 
+print(np.shape(trainX))
+print(np.shape(testX))
+print(np.shape(trainY))
+print(np.shape(testX))
+
 # construct the training image generator for data augmentation
 aug = ImageDataGenerator(
 	rotation_range
@@ -77,6 +84,7 @@ aug = ImageDataGenerator(
 # load the MobileNetV2 network, ensuring the head FC layer sets are left off
 baseModel = MobileNetV2(weights="imagenet", include_top=False,
 	input_tensor=Input(shape=(224, 224, 3)))
+print("model define")
 
 # construct the head of the model that will be placed on top of the base model
 headModel = baseModel.output
@@ -97,6 +105,7 @@ print("[INFO] compiling model...")
 opt = Adam(lr=INIT_LR)
 model.compile(loss="binary_crossentropy", optimizer=opt,
 	metrics=["accuracy"])
+
 # train the head of the network
 print("[INFO] training head...")
 H = model.fit(
@@ -104,7 +113,7 @@ H = model.fit(
 	steps_per_epoch=len(trainX) // BS,
 	validation_data=(testX, testY),
 	validation_steps=len(testX) // BS,
-	epochs=EPOCHS)
+	epochs=EPOCHS) #UnboundLocalError because dataset smaller compared to batch size.
 
 # make predictions on the testing set
 print("[INFO] evaluating network...")
@@ -117,10 +126,10 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
 
 # serialize the model to disk
 print("[INFO] saving mask detector model...")
-model.save(config.MODEL_PATH, save_format="h5")
+model.save(model_path, save_format="h5")
 # serialize the label encoder to disk
 print("[INFO] saving label encoder...")
-f = open(config.ENCODER_PATH, "wb")
+f = open(encoder_path, "wb")
 f.write(pickle.dumps(lb))
 f.close()
 
@@ -136,4 +145,4 @@ plt.title("Training Loss and Accuracy")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend(loc="lower left")
-plt.savefig(args["plot"])
+plt.savefig("figure.pdf")
