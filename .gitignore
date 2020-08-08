@@ -8,5 +8,9 @@ no_wound
 wound
 dataset
 
+#model
+encoder
+model
+
 # todo file
 todo

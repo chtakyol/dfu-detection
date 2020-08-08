@@ -27,8 +27,8 @@ INIT_LR = 1e-4
 EPOCHS = 5
 BS = 32
 input_size = (224, 224)
-model_path = "dfu-detection"
-encoder_path = "dfu-detection"
+model_path = "model"
+encoder_path = "encoder"
 dataset_path = "dataset"
 data_dir = pathlib.Path(dataset_path)
 # grab the list of images in our dataset directory, then initialize
